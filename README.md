@@ -1,4 +1,4 @@
-# Learning Data Structures & Algorithms in C++
+# Data Structures & Algorithms in C++
 
 This repository documents my journey of learning cpp and Data Structures and Algorihtms
 ### 🌟 **Practice Resources**
