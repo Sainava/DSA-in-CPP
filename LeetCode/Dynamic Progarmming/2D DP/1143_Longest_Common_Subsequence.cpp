@@ -37,7 +37,7 @@ text1 and text2 consist of only lowercase English characters.
 #include <string>
 using namespace std;
 
-// SOlution 1 - Up - Down DP -- Results in TLE for one test case 
+// SOlution 1 - Top - Down DP -- Results in TLE for one test case  ( because of addition space of n+m from recursion stack )
 class Solution {
 public:
     int solve(string text1, string text2 , int i , int j , vector<vector<int>> &dp){
@@ -76,6 +76,46 @@ public:
         // TC : O(n x m) 
         // SC: O(n x m) = DP + O(n + m ) Recursion stack = O( n x m)
         return solve(text1,text2,0,0 , dp); // 0 , 0 index of first and second string respectively 
+        
+    }
+};
+
+
+//Solution 2 - Bottom - Up DP  - NO TLE 
+class Solution {
+public:
+
+    int longestCommonSubsequence(string text1, string text2) {
+        //Step 1 : Form the DP
+        vector<vector<int>> dp( text1.length() + 1 , vector<int> (text2.length() +1 , 0)) ;
+        //DP ( i , j ) == Maximum common subsequence starting from i of text1 and j of text2
+        // Initialising with dp solves the base case - The base case being i>= n and j>=m
+        // Top Down - we go from 0 to n and 0 to m 
+        // So Bottom up - we go from n to 0 and m to 0
+        // Basically bottom up dp must have the answers that recursively call gives in dp top down 
+
+        for( int i = text1.length() -1 ; i >= 0 ; i--){
+            for( int j = text2.length() - 1 ; j>=0 ; j--){
+                
+                int ans = 0 ; 
+
+                // Matched Case 
+                if(text1[i] == text2[j]){
+                    ans =  1 + dp[i+1][j+1];
+                }
+                // Mismatched Case
+                else{
+                    ans = max( dp[i+1][j] , dp[i][j+1]);
+                }
+
+                dp[i][j] = ans;
+            }
+        }
+
+        // TC : O(n x m)
+        //SC:O(n x m )
+        return dp[0][0];
+
         
     }
 };
