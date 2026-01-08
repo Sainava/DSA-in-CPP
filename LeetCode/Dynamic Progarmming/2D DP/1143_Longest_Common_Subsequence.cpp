@@ -119,3 +119,45 @@ public:
         
     }
 };
+
+
+// Solution 3 - Bottom - Up DP - Space Optimized
+class Solution {
+public:
+
+    int longestCommonSubsequence(string text1, string text2) {
+        // Space Optimisation 
+        // One row only depends on the next 
+        vector<int> curr(text2.length() + 1 , 0);
+        vector<int> next(text2.length() + 1 , 0);
+
+        //dp[i+1] = next 
+        //dp[i]
+
+        for( int i = text1.length() -1 ; i >= 0 ; i--){
+            for( int j = text2.length() - 1 ; j>=0 ; j--){
+                
+                int ans = 0 ; 
+
+                // Matched Case 
+                if(text1[i] == text2[j]){
+                    ans =  1 + next[j+1];
+                }
+                // Mismatched Case
+                else{
+                    ans = max( next[j] , curr[j+1]);
+                }
+
+               curr[j] = ans;
+            }
+
+            next = curr;
+        }
+
+        // TC : O(n x m)
+        //SC:O( m )
+        return curr[0];
+
+        
+    }
+};
