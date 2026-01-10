@@ -97,3 +97,66 @@ public:
         return maxSum ;
     }
 };
+
+//Solution 2 - Divide and Conquer Approach 
+class Solution {
+public:
+    struct Node{
+        // For a segment [l.....r]
+        int sum ; // Sum of entire section
+        int prefix ; // maximum sum starting from l
+        int suffix ; //maximum sum edning at r
+        int best ; // maximum subarray sum from this segment 
+    };
+
+    // Merge logic 
+    // totalSum = left.totalSum + right.totalSum
+    // prefixMax = max(left.prefixMax, left.totalSum + right.prefixMax)
+    // suffixMax = max(right.suffixMax, right.totalSum + left.suffixMax)
+    // maxSub = max({left.maxSub, right.maxSub, left.suffixMax + right.prefixMax})
+    
+    Node merge(Node left, Node right){
+        Node res;
+
+        res.sum=left.sum + right.sum; // Total sum of left and right 
+
+        res.prefix = max(left.prefix , left.sum + right.prefix); // Must start with left so ->Two choices:
+        // Entirely inside left → left.prefix
+        // Left entire + right prefix → left.sum + right.prefix Left full plus starting of right 
+
+        res.suffix = max(right.suffix , right.sum + left.suffix); // Must end with right  so -> Two choices:
+        // Entirely inside right → right.suffix
+        // Right entire + left suffix → right.sum + left.suffix
+
+        res.best= max({left.best, right.best, left.suffix + right.prefix});
+        // Three possibilities:
+        // Fully in left → left.best
+        // Fully in right → right.best
+        //Crossing mid → left.suffix + right.prefix
+
+        return res;
+    }
+
+    Node build(int l , int r ,vector<int>& nums ){
+        if(l==r){
+            // Only one element in segment 
+            return {nums[l], nums[l], nums[l], nums[l]};
+        }
+
+        int mid = l + (r - l)/2;
+        Node left = build(l , mid , nums);
+        Node right = build (mid + 1, r , nums) ;
+
+        return merge(left , right) ;
+    }
+
+    int maxSubArray(vector<int>& nums) {
+        // Using Divide and Conquer
+        // Think of it like merge sort , first we divide(build) and then we merge 
+
+        // TC:O(n) -- > build is divide and conquer with recursive function : TC = 2T(n/2) + O(1) (as merge is constant funtion unlike merge sort which is n ) 
+        // SO TC:O(n) using master theorem 
+        // and SC:O(logn) due to recursive stack 
+        return build(0, nums.size() - 1, nums).best;
+    }
+};
