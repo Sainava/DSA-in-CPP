@@ -29,6 +29,7 @@ matrix[i][j] is '0' or '1'.
 #include<iostream>
 #include<vector>
 using namespace std ;
+
 class Solution {
 public:
     int solve(vector<vector<char>>& matrix , int i , int j , int &maxi){
@@ -79,6 +80,100 @@ public:
         }
     }
 
+    int solveTab(vector<vector<char>>& matrix){
+        int row = matrix.size();
+        int col = matrix[0].size();
+        int maxi = 0;
+
+        vector<vector<int>> dp(row + 1 , vector<int> (col + 1, 0));
+
+        for(int i = row - 1 ; i >= 0 ; i--){
+            for(int j = col -1 ; j >= 0 ; j--){
+
+                int right = dp[ i ] [j + 1 ];
+                int diagonal = dp[i + 1 ][ j + 1 ];
+                int down = dp[ i + 1 ][ j ];
+
+                int curr = matrix[i][j];
+
+                if(curr == '1'){
+                    dp[i][j] = 1 + min( right , min(diagonal , down));
+                    maxi= max(maxi , dp[i][j]);
+
+                }else{
+                    dp[i][j]=0 ;
+                }
+            }
+        }
+
+        return maxi*maxi;
+    }
+
+    // O(1) space solution
+    int solveFurtherSpaceOptimsied (vector<vector<char>>& matrix){
+        int row = matrix.size();
+        int col = matrix[0].size();
+        int maxi = 0;
+        
+        // Process the matrix from top-left to bottom-right (in-place)
+        for(int i = 0; i < row; i++){
+            for(int j = 0; j < col; j++){
+                if(matrix[i][j] == '1'){
+                    if(i == 0 || j == 0){
+                        // First row or first column - maximum square size is 1
+                        maxi = max(maxi, 1);
+                    } else {
+                        // Get values from top, left, and diagonal (already computed)
+                        int top = matrix[i-1][j] - '0';
+                        int left = matrix[i][j-1] - '0';
+                        int diagonal = matrix[i-1][j-1] - '0';
+                        
+                        // Calculate current square size and store back in matrix
+                        int minVal = min(top, min(left, diagonal));
+                        matrix[i][j] = (char)('0' + minVal + 1);
+                        maxi = max(maxi, minVal + 1);
+                    }
+                }
+            }
+        }
+        
+        return maxi * maxi;
+    }
+
+    int solveOptimised(vector<vector<char>>& matrix){
+        int row = matrix.size();
+        int col = matrix[0].size();
+        int maxi = 0;
+
+        vector<int> curr(col + 1 , 0) ; // current row
+        vector<int> next (col + 1 , 0); // next row
+
+
+        for(int i = row - 1 ; i >= 0 ; i--){
+            for(int j = col -1 ; j >= 0 ; j--){
+
+                int right = curr[j + 1 ];
+                int diagonal = next[ j + 1 ];
+                int down = next[ j ];
+
+
+                if(matrix[i][j] == '1'){
+                    curr[j] = 1 + min( right , min(diagonal , down));
+                    maxi= max(maxi , curr[j]);
+
+                }else{
+                    curr[j]=0 ;
+                }
+
+               
+            }
+            next = curr;
+        }
+
+        return maxi*maxi;
+
+    }
+
     int maximalSquare(vector<vector<char>>& matrix) {
         
         // // Simple recursion 
@@ -89,15 +184,27 @@ public:
         // // TC:O(3*(n*m))
         // return maxi*maxi ;
 
-        // DP solution 
-        int n = matrix.size();
-        int m = matrix[0].size();
-        vector<vector<int>> dp(n, vector<int> (m,-1) );
+        // // DP solution 
+        // int n = matrix.size();
+        // int m = matrix[0].size();
+        // vector<vector<int>> dp(n, vector<int> (m,-1) );
 
-        int maxi = 0;
-        //Step 1 - Pass dp 
-        solveMem(matrix , 0 , 0 , maxi ,dp );
+        // int maxi = 0;
+        // //Step 1 - Pass dp 
+        // solveMem(matrix , 0 , 0 , maxi ,dp );
 
-        return maxi*maxi ;
+        // return maxi*maxi ;
+
+        // Tabulation method 
+        //TC:(nxm) and SC:O(nxm)
+        //return solveTab(matrix);
+
+        // Space Optimised 
+        //TC:(nxm) and SC:O(m)
+        return solveOptimised(matrix);
+
+
     }
+
+    // To do --> Bring solutiom to O(1) space
 };
