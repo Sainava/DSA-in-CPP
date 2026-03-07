@@ -49,6 +49,7 @@ public:
         // TC:O(n) and SC:O(n/3 + 1) 
         return -1;
     }
+};
 
 //SOLUTION 2 : Using Bit Manipulation
 class Solution2 {
@@ -82,5 +83,26 @@ public:
         return ans;
     }
 };
+
+// Solution 3 : Sort and check every 3rd element
+class Solution3 {
+public:
+    int singleNumber(vector<int>& nums) {
+        // 4 solution 
+
+        // Solution 3 
+
+        sort(nums.begin() , nums.end());
+
+        for(int i = 1 ; i < nums.size() ; i = i+3){ // TC:O(n/3)
+
+            if( nums[i] != nums[i-1]){
+                return nums[i-1];
+            }
+        }
+
+        // TC : O(nlogn + n/3) and SC:O(1)
+        return nums[nums.size() -1 ];
+    }
 };
 
