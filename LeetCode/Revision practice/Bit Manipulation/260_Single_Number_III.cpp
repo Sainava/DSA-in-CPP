@@ -55,3 +55,51 @@ public:
         return ans;
     }
 };
+
+// Solution 2 : Using Bit Manipulation and BUCKETS
+class Solution {
+public:
+    vector<int> singleNumber(vector<int>& nums) {
+        // Using bit manipulation and buckets 
+
+        // First find the xor of the two distinct numbers 
+        long xorr = 0 ; // long so that the least integer does not give a problem here 
+        for(int i = 0 ; i < nums.size() ; i++ ){
+            xorr = xorr ^ nums[i];
+        }
+
+        // xorr is essentially ans1 ^ ans2
+        // In xorr --> only the bits which are different in the distinct numbers are set to 1 
+        // Here find the rightmost set bit 
+
+        int rightMost = (xorr & xorr -1) ^ xorr;
+        // xorr & xorr -1 set the rightmost bit to 0 and then ^ xorr gives only that bit as all the other bits are the same 
+
+        //Now based on this separate into two buckets
+        // rightMost essentially contains the first bit from the right that is different in the two answers
+        // So we separate the numbers based on that 
+        // Since the others repeat we cancel them out leaving only the answers
+
+        int bucket1 = 0 ;
+        int bucket2 = 0;
+        for(int i = 0 ; i < nums.size() ;i++){
+            
+            // Which bucket contains which number does not matter 
+            // That bit is 1 
+            if( (nums[i] & rightMost) != 0){
+                bucket1 = bucket1 ^ nums[i];
+            }
+            // That bit is 0 
+            else{
+                bucket2 = bucket2 ^ nums[i];
+            }
+        }
+
+        vector<int> ans ;
+        ans.push_back( bucket1);
+        ans.push_back( bucket2);
+
+        //TC:O(n) and SC:O(1)
+        return ans;
+    }
+};
