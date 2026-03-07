@@ -51,16 +51,44 @@ public:
     int hammingWeight(int n) {
         // convert to binary and while doing it count one 
 
+        // int count = 0 ;
+
+        // while ( n != 0){
+        //     if(n%2==1){
+        //         count++;
+        //     }
+    
+        //     n=n/2;
+        // }
+
+        // while ( n != 0){
+        //     // Or since last bit of an odd number is always one 
+        //     if( n & 1 == 1){
+        //         count++;
+        //     }
+    
+        //     n=n>>1;
+        // }
+
+        // //TC:Ologn and SC:O(1)
+        // return count ;
+
+        // The TC is actually TC:O(no of set bits) which in the worst case will be TC:O(31) as TC:O(logn) and n max will be 2^31
+
+        // See the next solution to understand better 
         int count = 0 ;
 
-        while ( n != 0){
-            if(n%2==1){
-                count++;
-            }
-            n=n/2;
+        while (n!=0){
+            n = n& n-1;
+            count++;
         }
 
-        //TC:Ologn and SC:O(1)
+        // For the above -- at each iteration the rightmost bit is set to 1
+        // SO TC:O(no of set bits ) which in worst case is TC(1)
+        // But since this is very unlikely it is better than the above solutions 
+
+        //TC:O(1)
         return count ;
+            
     }
-};
+}; 
