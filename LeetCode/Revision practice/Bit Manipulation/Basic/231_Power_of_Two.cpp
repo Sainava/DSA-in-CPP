@@ -1,0 +1,67 @@
+/*
+Given an integer n, return true if it is a power of two. Otherwise, return false.
+
+An integer n is a power of two, if there exists an integer x such that n == 2x.
+
+ 
+
+Example 1:
+
+Input: n = 1
+Output: true
+Explanation: 20 = 1
+Example 2:
+
+Input: n = 16
+Output: true
+Explanation: 24 = 16
+Example 3:
+
+Input: n = 3
+Output: false
+ 
+
+Constraints:
+
+-231 <= n <= 231 - 1
+ 
+
+Follow up: Could you solve it without loops/recursion?
+*/
+#include<iostream>
+using namespace std ;
+
+class Solution {
+public:
+    bool isPowerOfTwo(int n) {  
+
+        // int num=1;
+        // for(int i=0;i<=30;i++){
+        //     if(num==n){
+        //         return true;
+        //     }
+
+        //     if(num<INT_MAX/2){
+        //         num=num*2;
+        //     }
+
+        // }
+
+        // return false;
+
+        // for(int i=0;i<=30;i++){
+        //     if(pow(2,i)==n){
+        //         return true;
+        //     }
+        // }
+
+        // return false;
+
+        //TC:O(1) and SC:O(1)
+        if(n==0  || n==INT_MIN ){
+            return false;
+        }
+
+        return (n & n-1) == 0;
+    }
+};
