@@ -49,5 +49,38 @@ public:
         // TC:O(n) and SC:O(n/3 + 1) 
         return -1;
     }
+
+//SOLUTION 2 : Using Bit Manipulation
+class Solution2 {
+public:
+    int singleNumber(vector<int>& nums) {
+        // 4 solution 
+
+        // solution 2
+        int ans = 0;
+        for(int bitIndex = 0 ; bitIndex < 32 ; bitIndex++){
+
+            // For each bit , check if set number is multiple of 3 --> if not that this means it is a set bit in out required answer 
+            int count = 0;
+
+            // Now check this bit for all the elements 
+
+            for(int i = 0 ; i < nums.size() ; i++){
+
+                if( (nums[i]>> bitIndex ) & 1){
+                    count ++;
+                }
+            }
+
+            if(count %3 != 0){
+                // Set that bit to 1 
+                ans = ans | (1<< bitIndex);
+            }
+        }
+
+        //TC :O(n*32) and SC:(1)
+        return ans;
+    }
+};
 };
 
