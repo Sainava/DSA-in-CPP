@@ -77,7 +77,7 @@ vector<string> generateBinaryNumbers(int n)
     //     ans.push_back( func(i) );
     // }
     
-    // //TC:O(n logn) and SC:O(1)
+    // //TC:O(n logn) and SC:O(nlogn) because we store n binary numbers and each number can have logn bits
     // return ans;
 
     //The queue solution is a very popular interview approach because it generates binary numbers in order without converting integers to binary.
