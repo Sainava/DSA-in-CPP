@@ -106,7 +106,7 @@ public:
     }
 };
 
-// Solution 4 : Using bit manipulation and keeping track of bits seen once and twice
+// Solution 4 : Using bit manipulation and keeping track of bits seen once and twice -- BUCKETS
 class Solution4 {
 public:
     int singleNumber(vector<int>& nums) {
