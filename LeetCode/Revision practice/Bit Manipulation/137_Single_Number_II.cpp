@@ -106,3 +106,26 @@ public:
     }
 };
 
+// Solution 4 : Using bit manipulation and keeping track of bits seen once and twice
+class Solution4 {
+public:
+    int singleNumber(vector<int>& nums) {
+        int ones = 0 ;
+        int twos = 0 ;
+
+        for(int i = 0 ; i< nums.size() ; i++){
+            
+            // Toggle bits in ones and remove bits already counted twice
+            ones =( ones ^ nums[i] ) & ~twos;
+
+            // Add to twos if  not present in ones 
+            twos = ( twos ^ nums[i] ) & ~ones;
+        }
+
+        //“ones stores bits seen once, twos stores bits seen twice, and when a bit appears the third time it gets cleared from both.”
+
+        //TC:O(n)  and SC:O(1)
+        return ones ;
+    }
+};
+
