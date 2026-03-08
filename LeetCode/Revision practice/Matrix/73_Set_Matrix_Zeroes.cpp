@@ -128,3 +128,72 @@ public:
         return ;
     }
 };
+
+//Solution 3: Optimised Space using Constant Space
+class Solution {
+public:
+    void setZeroes(vector<vector<int>>& matrix) {
+        // Optimised space using constant space
+
+        // We use the first row and first col as the required spaces instead of new vectors ( see the previous solution to see )
+
+        // vector<int> cols(matrix[0].size() , 0); // matrix[0][....] will do this work
+        // vector<int> rows(matrix.size() , 0); // matrix[....][0]  will do this work 
+
+        int col0 = 1 ; // Since element [0][0] will be in both rows and cols check so we deal with it separately
+
+        //TC:O(nxm)
+        for(int i = 0 ; i < matrix.size() ; i++){
+
+            for(int j = 0 ; j < matrix[0].size() ; j++){
+
+                if(matrix[i][j] == 0){
+                    // Need to mark the ith row 
+                    matrix[i][0] = 0 ;
+
+                    if(j!=0){
+                        // mark the jth row 
+                        matrix[0][j] = 0;
+                    }else{
+                        col0 = 0;
+                    }
+                }
+            }
+        }
+
+        //TC:O(nxm)
+        for(int i = 1 ; i < matrix.size() ; i++){
+
+            for(int j = 1 ; j < matrix[0].size() ; j++){
+
+                if(matrix[i][j] != 0){
+                    
+                    if(matrix[i][0] == 0 || matrix[0][j] == 0 ) {
+                        matrix[i][j] = 0;
+                    }
+
+                
+                }
+            }
+        }
+
+        // TC:O(m)
+        if(matrix[0][0] == 0){
+            // Everyone in first row will be zero 
+            for(int j = 1 ; j < matrix[0].size() ; j++) matrix[0][j] = 0;
+        }
+
+        //TC:O(n)
+        if(col0==0){
+            // Everyone in first col will be zero 
+            for(int i = 0 ; i < matrix.size() ; i++){
+                matrix[i][0] = 0;
+            }
+        }
+
+        //TC:O(2(nxm) + (n+m)) and SC:(1)
+        return ;
+
+
+    }
+};
