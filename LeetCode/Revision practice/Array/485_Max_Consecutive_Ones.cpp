@@ -21,7 +21,7 @@ nums[i] is either 0 or 1.
 */
 #include <iostream>
 #include <vector>
-using namespace std;
+using namespace std; 
 
 class Solution {
 public:
