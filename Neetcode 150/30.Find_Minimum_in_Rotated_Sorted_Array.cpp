@@ -84,6 +84,7 @@ public:
         
         // TC :O(logn) and SC:O(1)
         // Not here but if duplcates present can take TC:O(n/2 ) approx 
+                //** The no of times array has been rotated is just index of the minimum(called pivot) element
         return mini ;
     }
 };
