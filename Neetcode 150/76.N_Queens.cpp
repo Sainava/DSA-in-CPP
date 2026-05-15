@@ -34,85 +34,54 @@ using namespace std;
 
 class Solution {
 public:
-
-    void addSolution(vector<string>& board, vector<vector<string>>& ans) {
-        ans.push_back(board);
-    }
-
-    void solve(
-        int row,
-        int n,
-        vector<vector<string>>& ans,
-        vector<string>& board,
-        unordered_map<int,bool>& colCheck,
-        unordered_map<int,bool>& leftDiagonalCheck,
-        unordered_map<int,bool>& rightDiagonalCheck
-    ) {
-
-        // Base case
-        if(row == n) {
-            addSolution(board, ans);
-            return;
+    void solve(int row , int n ,vector<string> &board ,vector<vector<string>> &ans ,unordered_map<int,bool> &colCheck ,unordered_map<int,bool> &leftDiagonalCheck ,unordered_map<int,bool> &rightDiagonalCheck ){
+        if(row == n){
+            ans.push_back(board);
+            return ;
         }
 
-        // Try placing queen in every column of current row
-        for(int col = 0; col < n; col++) {
+        // check for all cols in this row 
+        for(int col = 0 ; col < n ; col++){
 
-            // Check if position is safe
-            if(
-                colCheck[col] == false &&
-                leftDiagonalCheck[row + col] == false &&
-                rightDiagonalCheck[(n - 1) + (col - row)] == false
-            ) {
+            if( colCheck[col] == false && 
+                leftDiagonalCheck[(n-1) + (col - row)]==false && 
+                rightDiagonalCheck[row + col] == false 
+                ){
+                
+                    // Place queen here 
+                    colCheck[col] = true ;
+                    leftDiagonalCheck[(n-1) + (col - row)]= true ; 
+                    rightDiagonalCheck[row + col] = true ;
 
-                // Place queen
-                board[row][col] = 'Q';
+                    board[row][col] = 'Q';
 
-                colCheck[col] = true;
-                leftDiagonalCheck[row + col] = true;
-                rightDiagonalCheck[(n - 1) + (col - row)] = true;
+                    solve(row + 1 , n , board , ans , colCheck ,leftDiagonalCheck , rightDiagonalCheck );
 
-                // Recurse for next row
-                solve(
-                    row + 1,
-                    n,
-                    ans,
-                    board,
-                    colCheck,
-                    leftDiagonalCheck,
-                    rightDiagonalCheck
-                );
+                    // Backtrack 
+                    board[row][col] = '.';
 
-                // Backtrack
-                board[row][col] = '.';
-
-                colCheck[col] = false;
-                leftDiagonalCheck[row + col] = false;
-                rightDiagonalCheck[(n - 1) + (col - row)] = false;
-            }
+                    colCheck[col] = false ;
+                    leftDiagonalCheck[(n-1) + (col - row)]= false ; 
+                    rightDiagonalCheck[row + col] = false ;
+                }
         }
     }
 
     vector<vector<string>> solveNQueens(int n) {
+        vector<vector<string>> ans ;
 
-        vector<vector<string>> ans;
+        vector<string> board( n , string(n , '.'));
 
-        vector<string> board(n, string(n, '.'));
+        unordered_map<int,bool> colCheck ;
+        unordered_map<int,bool> leftDiagonalCheck ;
+        unordered_map<int,bool> rightDiagonalCheck ;
 
-        unordered_map<int,bool> colCheck;
-        unordered_map<int,bool> leftDiagonalCheck;
-        unordered_map<int,bool> rightDiagonalCheck;
+        int row = 0 ;
 
-        solve(
-            0,
-            n,
-            ans,
-            board,
-            colCheck,
-            leftDiagonalCheck,
-            rightDiagonalCheck
-        );
-
-        return ans;
+        solve(row , n , board , ans , colCheck ,leftDiagonalCheck , rightDiagonalCheck );
+        //TC:O(n! * no of solutions) as first row has n choices , second row has n-1 choices , and so on so n! and each solution is copied 
+        //SC:O(n) recursive stack 
+        //SC:O(n^2) for board and SC:O(n) hash maps 
+        return ans ;
     }
 };
