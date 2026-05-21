@@ -26,6 +26,7 @@ s contains only digits and English letters.
 #include <vector>
 using namespace std;
 
+//Solution 1 : Expand from centre
 class Solution {
 public:
     void checkPalindrome(int l ,int r ,int n , string &s ,int &maxLen , int &startIndex ){
@@ -75,5 +76,48 @@ public:
 
         //TC:O(n^2) and SC:O(1)
         return s.substr(startIndex,maxLen);
+    }
+};
+
+// Solution 2 : DP
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        // dp solution , for all substrings check if they are substrings 
+        // But we save the extra check for palindrome of O(n) by using dp 
+
+        int n = s.size();
+        
+        vector<vector<bool>> dp (n , vector<bool>(n,false));
+        // dp[i][j] = true means s[i] to s[j] is a palindrome
+
+        // make all one length substring true as they are palindromes
+
+        int maxLen = 0;
+        int startIndex = 0 ;
+        // Outer loop -> creates all possible lengths that are possible 
+        for(int len = 1 ; len <= n ;len++){
+            // Inner loop generate all possible substrings of that length 
+
+            for(int i = 0 ; i + len - 1 < n ; i++){
+                int j = i + len - 1;
+                // dp condition 
+                if(s[i] == s[j] && (len<=2 || dp[i+1][j-1])){
+                    // then it a palindrome 
+                    dp[i][j] = true ; 
+                    if(len > maxLen){
+                        maxLen = len;
+                        startIndex = i;
+                    }
+                    // len =1 always palindrome (eg : a)
+                    // len = 2 and s[i] = s[j] always palindrome ( eg:aa)
+                }
+            }
+        }
+
+        //TC:O(n^2) and SC:O(n^2)
+        return s.substr(startIndex , maxLen);
+
+        
     }
 };
