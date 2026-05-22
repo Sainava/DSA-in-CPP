@@ -25,6 +25,7 @@ Constraints:
 #include <vector>
 using namespace std;
 
+//Solution with prefix and suffix product :
 class Solution {
 public:
     int maxProduct(vector<int>& nums) {
@@ -62,4 +63,35 @@ public:
         return maxi ;
     }   
     
+};
+
+//Solution with dp :
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
+        // Like the prefix suffix solution we track two states here 
+        // Max product ending at index i 
+        // Min product ending at index i 
+        // We need min product because a large negative number may become positive (by multiplying with a negative)
+        int n = nums.size() ; 
+        vector<vector<int>> dp(n , vector<int> (2,-1));
+
+        dp[0][0] = nums[0] ; // max product ending at index 0 ;
+        dp[0][1] = nums[0] ; // min product ending at index 0 ; 
+        int ans = nums[0];
+
+        for(int i = 1 ; i < n ; i++){
+            int curr = nums[i] ; // this handles the zero case as well by reinitialising values with the value next to 0 
+
+            int prevMax = dp[i-1][0];
+            int prevMin = dp[i-1][1];
+
+            dp[i][0] = max(curr ,max(nums[i]*prevMax ,nums[i]*prevMin));
+            dp[i][1] = min(curr ,min(nums[i]*prevMax ,nums[i]*prevMin));
+            ans = max(ans , dp[i][0]);
+        }
+
+        //TC:O(n) and SC:O(n)
+        return ans;
+    }
 };
