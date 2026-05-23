@@ -31,6 +31,8 @@ We can make the maximum profit by not buying the stock.
 #include<vector>
 using namespace std;
 
+#include<bits/stdc++.h>
+
 long func(int index , int buy ,long *values, int n , vector<vector<long>> &dp){
 
     if( index == n){
@@ -99,33 +101,55 @@ long getMaximumProfit(long *values, int n)
     // //TC:O(n*2) and SC:O(n*2)
     // return dp[0][1];
 
-    // Space Optimised 
-    vector<long> nextDay(2,0);
-    vector<long> currDay(2,0);
+    // // Space Optimised 
+    // vector<long> nextDay(2,0);
+    // vector<long> currDay(2,0);
+
+    // for(int index = n-1 ; index >=0 ; index--){
+    //     for(int buy = 0 ; buy <= 1 ; buy++){
+    //         // On each day
+    //         long profit = LONG_MIN ; 
+    //         if( buy){
+    //             // We can buy 
+    //             // But we choose if we want to buy or not so 2 choices 
+    //             long willBuy = -values[index] + nextDay[0]; // if we buy we cannot buy next day 
+    //             long willNotBuy = 0 +  nextDay[1] ;  // if we did not buy we can buy next day 
+    //             profit = max(willBuy ,willNotBuy );
+    //         }else{
+    //             // We can sell 
+    //             // But we choose if we want to sell or not so 2 choices 
+
+    //             long willSell = values[index] + nextDay[1]; // if we sell we can buy next day 
+    //             long willNotSell = 0 + nextDay[0]; // if we do not sell we cannot buy next day 
+    //             profit = max(willSell ,willNotSell );
+    //         }
+            
+    //         currDay[buy] = profit ;
+    //     }
+    //     nextDay = currDay;
+    // }
+    // //TC:O(n*2) and SC:O(1)
+    // return currDay[1];
+
+    // Space Optimised  -> Use 4 variables 
+    long aheadBuy  = 0 ;
+    long aheadNotBuy  = 0 ;
+    long currBuy = 0 ;
+    long currNotBuy = 0 ;
 
     for(int index = n-1 ; index >=0 ; index--){
-        for(int buy = 0 ; buy <= 1 ; buy++){
-            // On each day
-            long profit = LONG_MIN ; 
-            if( buy){
-                // We can buy 
-                // But we choose if we want to buy or not so 2 choices 
-                long willBuy = -values[index] + nextDay[0]; // if we buy we cannot buy next day 
-                long willNotBuy = 0 +  nextDay[1] ;  // if we did not buy we can buy next day 
-                profit = max(willBuy ,willNotBuy );
-            }else{
-                // We can sell 
-                // But we choose if we want to sell or not so 2 choices 
+                // On each day                
+                long willBuy = -values[index] + aheadNotBuy; // if we buy we cannot buy next day 
+                long willNotBuy = 0 + aheadBuy ;  // if we did not buy we can buy next day 
+                currBuy = max(willBuy ,willNotBuy );
 
-                long willSell = values[index] + nextDay[1]; // if we sell we can buy next day 
-                long willNotSell = 0 + nextDay[0]; // if we do not sell we cannot buy next day 
-                profit = max(willSell ,willNotSell );
-            }
+                long willSell = values[index] + aheadBuy; // if we sell we can buy next day 
+                long willNotSell = 0 + aheadNotBuy; // if we do not sell we cannot buy next day 
+                currNotBuy = max(willSell ,willNotSell );
             
-            currDay[buy] = profit ;
-        }
-        nextDay = currDay;
+                aheadBuy = currBuy ;
+                aheadNotBuy = currNotBuy ;
     }
     //TC:O(n*2) and SC:O(1)
-    return currDay[1];
+    return currBuy;
 }
