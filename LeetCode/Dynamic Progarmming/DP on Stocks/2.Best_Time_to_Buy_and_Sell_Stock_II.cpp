@@ -31,8 +31,6 @@ We can make the maximum profit by not buying the stock.
 #include<vector>
 using namespace std;
 
-#include<bits/stdc++.h>
-
 long func(int index , int buy ,long *values, int n , vector<vector<long>> &dp){
 
     if( index == n){
