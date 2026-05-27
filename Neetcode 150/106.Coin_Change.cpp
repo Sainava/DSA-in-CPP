@@ -144,3 +144,98 @@ public:
         // Cannot be space optimised 
     }
 };
+
+
+
+class Solution {
+public:
+    int func(int index , int target ,vector<int>& coins , vector<vector<int>> &dp){
+        if(target < 0 ) return INT_MAX ;
+        if(target == 0 ) return 0 ; 
+        if(index == coins.size()) return INT_MAX ; // means target is non zero 
+
+
+        if(dp[index][target]!= - 1) return dp[index][target] ;
+
+        int notTake = 0 + func( index + 1 , target , coins ,dp);
+        int take = INT_MAX;
+        if( coins[index] <= target){
+            int temp = func(index , target - coins[index] , coins ,dp);
+
+            if(temp != INT_MAX){
+                take = 1 + temp;
+            }
+        } 
+
+        return dp[index][target] = min(notTake , take );
+
+    }
+    int coinChange(vector<int>& coins, int amount) {
+        int n = coins.size() ; 
+        
+        // //Top - Down 
+        // int index = 0 ; 
+        // int target = amount ;
+        // vector<vector<int>> dp( n , vector<int> (target+1 , -1));
+        // dp[0][target] = func(index , target , coins ,dp );
+        // if(dp[0][target] == INT_MAX) return -1 ;
+        // //TC:O(n*amount) and SC:O(n*amount)
+        // return dp[0][target] ; 
+
+        // // Bottom up
+        // vector<vector<int>> dp( n+1 , vector<int> (amount+1 , INT_MAX));
+        // for(int i = 0 ; i <= n ; i++){
+        //     dp[i][0] = 0 ;
+        // }
+
+        // for(int index = n-1 ; index>= 0 ; index--){
+        //     for(int target = 0 ;target <= amount ; target++ ){
+        //         int notTake = 0 + dp[index + 1][target];
+        //         int take = INT_MAX;
+        //         if( coins[index] <= target){
+        //             int temp = dp[index] [target - coins[index]];
+
+        //             if(temp != INT_MAX){
+        //                 take = 1 + temp;
+        //             }
+        //         } 
+
+        //         dp[index][target] = min(notTake , take );
+        //     }
+        // }
+        // if(dp[0][amount] == INT_MAX) return -1 ;
+        // //TC:O(n*amount) and SC:O(n*amount)
+        // return dp[0][amount] ; 
+
+
+        // Space Optimised
+        vector<int> curr(amount+1 , INT_MAX);
+        vector<int> next(amount+1 , INT_MAX);
+
+        next[0] = 0 ; 
+        curr[0] = 0 ; 
+        for(int index = n-1 ; index>= 0 ; index--){
+            for(int target = 0 ;target <= amount ; target++ ){
+
+                int notTake = 0 + next[target];
+                int take = INT_MAX;
+                if( coins[index] <= target){
+                    int temp = curr[target - coins[index]];
+
+                    if(temp != INT_MAX){
+                        take = 1 + temp;
+                    }
+                } 
+
+                curr[target] = min(notTake , take );
+            }
+            next = curr ;
+        }
+
+        if(next[amount] == INT_MAX) return -1 ;
+        //TC:O(n*amount) and SC:O(amount)
+        return next[amount] ; 
+
+    }
+};
+
