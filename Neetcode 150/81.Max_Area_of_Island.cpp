@@ -74,5 +74,47 @@ public:
         return maxArea;
     }
 
-
 };
+
+class Solution {
+public:
+    int helper(int row , int col ,vector<vector<int>>& grid ,vector<vector<bool>> &visited , int m ,int n ){
+        
+        visited[row][col] = true ; 
+        int cnt = 0 ; 
+
+        for(int delRow = -1 ; delRow <= 1 ; delRow++){
+            for(int delCol = -1 ; delCol <= 1 ; delCol++){
+                if( abs(delRow) + abs(delCol) == 1){
+                    int r = row + delRow ; 
+                    int c = col + delCol ;
+
+                    if(r>= 0 && r < m && c>=0 && c < n && grid[r][c] && !visited[r][c] ){
+                        cnt += helper(r , c , grid , visited , m , n );
+                    }
+                }
+            }
+        }
+
+        return 1 + cnt ; 
+    }
+
+    int maxAreaOfIsland(vector<vector<int>>& grid) {
+        int m = grid.size() ; 
+        int n = grid[0].size() ;
+
+        vector<vector<bool>> visited( m ,vector<bool>(n,false) );
+        int maxi = 0 ; 
+        for(int i = 0 ; i < m ; i++){
+            for(int j = 0 ; j < n ; j++){
+                if(!visited[i][j] && grid[i][j]){
+                    maxi = max( maxi , helper(i,j,grid,visited , m , n)) ;
+                }
+            }
+        }
+
+        //TC:O(4*m*n) and SC:O(m*n)
+        return maxi ; 
+    }
+};
+
